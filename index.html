@@ -760,7 +760,7 @@ Return strictly JSON with exact numeric values:
       const saveBtn = document.getElementById('saveDriveBtn');
       if (saveBtn) saveBtn.addEventListener('click', saveDayToDrive);
 
-      // Load saved keys from local storage
+      // 1. Load Gemini API Key
       const savedApiKey = safeLoadStorage('gemini_api_key', '');
       const apiKeyEl = document.getElementById('cfgApiKey');
       if (apiKeyEl && savedApiKey) apiKeyEl.value = savedApiKey;
@@ -770,6 +770,7 @@ Return strictly JSON with exact numeric values:
         apiKeyEl.addEventListener('change', (e) => safeSaveStorage('gemini_api_key', e.target.value.trim()));
       }
 
+      // 2. Load Google Apps Script URL
       const savedScriptUrl = safeLoadStorage('google_script_url', '');
       const scriptUrlEl = document.getElementById('cfgScriptUrl');
       if (scriptUrlEl && savedScriptUrl) scriptUrlEl.value = savedScriptUrl;
@@ -779,14 +780,39 @@ Return strictly JSON with exact numeric values:
         scriptUrlEl.addEventListener('change', (e) => safeSaveStorage('google_script_url', e.target.value.trim()));
       }
 
-      ['cfgGender', 'cfgAge', 'cfgWeight', 'cfgHeight', 'cfgActivity', 'cfgGoal'].forEach(id => {
+      // 3. Restore and Persist Profile Fields (Age, Weight, Height, etc.)
+      const profileFields = ['cfgGender', 'cfgAge', 'cfgWeight', 'cfgHeight', 'cfgActivity', 'cfgGoal'];
+
+      const savedProfile = safeLoadStorage('macro_user_profile', null);
+      if (savedProfile) {
+        profileFields.forEach(id => {
+          const el = document.getElementById(id);
+          if (el && savedProfile[id] !== undefined) {
+            el.value = savedProfile[id];
+          }
+        });
+      }
+
+      // Save whenever user edits, then recalculate targets
+      profileFields.forEach(id => {
         const input = document.getElementById(id);
         if (input) {
-          input.addEventListener('change', updateTargets);
-          input.addEventListener('input', updateTargets);
+          const handleUpdate = () => {
+            const currentProfile = {};
+            profileFields.forEach(fieldId => {
+              const el = document.getElementById(fieldId);
+              if (el) currentProfile[fieldId] = el.value;
+            });
+            safeSaveStorage('macro_user_profile', currentProfile);
+            updateTargets();
+          };
+
+          input.addEventListener('change', handleUpdate);
+          input.addEventListener('input', handleUpdate);
         }
       });
 
+      // Recalculate targets using restored values & render initial meals
       updateTargets();
       renderMeals();
 
