@@ -348,10 +348,15 @@
 
         document.getElementById('caloriesConsumed').innerText = totals.calories;
         document.getElementById('targetCalories').innerText = targets.calories;
-        const deficit = targets.tdee - totals.calories;
-        document.getElementById('calorieSub').innerText = deficit >= 0 
-          ? `Deficit: -${deficit} kcal` 
-          : `Surplus: +${Math.abs(deficit)} kcal`;
+
+        const remaining = targets.calories - totals.calories;
+        if (remaining >= 0) {
+          document.getElementById('calorieSub').innerText = `${remaining} kcal remaining`;
+          document.getElementById('calorieSub').className = "text-[11px] text-emerald-400 font-medium";
+        } else {
+          document.getElementById('calorieSub').innerText = `+${Math.abs(remaining)} kcal over target`;
+          document.getElementById('calorieSub').className = "text-[11px] text-rose-400 font-semibold";
+        }
 
         const calPct = Math.min(Math.round((totals.calories / (targets.calories || 1)) * 100), 100);
         const calBar = document.getElementById('calorieBar');
