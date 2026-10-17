@@ -3,592 +3,651 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Daily Meal & Macro Hub</title>
+  <title>Juicing & Recipe DB Hub</title>
   
-  <!-- PWA Meta Tags -->
-  <link rel="manifest" href="manifest.json" />
+  <link rel="manifest" href="./manifest.json" />
   <meta name="theme-color" content="#020617" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Macro Hub" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
+  <meta name="apple-mobile-web-app-title" content="JuiceHub" />
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2405/2405470.png" />
 
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans p-4 md:p-8 select-none">
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans p-2 md:p-6 select-none">
 
-  <div class="max-w-6xl mx-auto space-y-6">
+  <div class="max-w-7xl mx-auto space-y-5">
 
     <!-- Header -->
-    <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-6">
+    <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-800 pb-4">
       <div>
-        <h1 class="text-3xl font-bold tracking-tight text-white flex items-center gap-2">
-          <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-          </svg>
-          Daily Meal & Macro Hub
-        </h1>
-        <p class="text-slate-400 text-sm mt-1">Logs raw vs. cooked portions and syncs straight into your Google Sheet.</p>
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-emerald-950 border border-emerald-700/60 text-emerald-400 font-mono text-[10px] font-bold tracking-wide">PWA v2.3</span>
+          <h1 class="text-xl md:text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+            <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+            </svg>
+            Juicing Recipe & Daily Batch Hub
+          </h1>
+        </div>
+        <p class="text-slate-400 text-xs mt-1">Dynamic Model Discovery + Embedded USDA Engine + 4-Day Batch Ledger.</p>
       </div>
 
-      <div class="flex items-center gap-2 sm:gap-3">
-        <!-- NEW: Open Sheet Button -->
-        <button id="openSheetBtn" type="button" class="cursor-pointer px-3 sm:px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-800 hover:bg-slate-700 text-xs font-semibold flex items-center gap-2 transition text-slate-200">
-          <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-          </svg>
-          <span class="hidden sm:inline">Sheet</span>
-        </button>
-
-        <button id="toggleSettingsBtn" type="button" class="cursor-pointer px-3 sm:px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-900 hover:bg-slate-800 text-xs font-semibold flex items-center gap-2 transition">
+      <div class="flex items-center gap-2">
+        <button id="toggleSettingsBtn" type="button" class="cursor-pointer px-3.5 py-1.5 rounded-xl border border-slate-700 bg-slate-900 hover:bg-slate-800 text-xs font-semibold flex items-center gap-1.5 transition">
           <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
           </svg>
-          <span class="hidden sm:inline">Targets</span>
-        </button>
-
-        <button id="saveDriveBtn" type="button" class="flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl font-medium bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg transition cursor-pointer text-xs sm:text-sm">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-          </svg>
-          <span id="saveDriveText">Save to Drive</span>
+          API Settings
         </button>
       </div>
     </header>
 
     <!-- Notification Banner -->
-    <div id="statusBanner" class="hidden p-4 rounded-xl border text-sm font-medium"></div>
+    <div id="statusBanner" class="hidden p-3 rounded-xl border text-xs md:text-sm font-medium"></div>
 
-    <!-- Targets & Settings Accordion -->
-    <div id="settingsPanel" class="hidden bg-slate-900 border border-slate-700/80 rounded-2xl p-5 space-y-4 shadow-xl">
-      <div class="flex items-center justify-between">
-        <h3 class="text-sm font-semibold text-slate-200 uppercase tracking-wider">TDEE & Target Calculator (Imperial)</h3>
-        <span class="text-xs text-slate-400">Updates targets in real time</span>
+    <!-- API Settings Panel -->
+    <div id="settingsPanel" class="hidden bg-slate-900 border border-slate-700/80 rounded-2xl p-4 shadow-2xl space-y-3">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+        <h3 class="text-xs font-semibold text-slate-200 uppercase tracking-wider">Cloud Integrations & API Credentials</h3>
+        <span class="text-[10px] text-slate-400">Stored locally in your browser</span>
       </div>
-
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
-          <label class="text-xs text-slate-400">Gender</label>
-          <select id="cfgGender" class="mt-1 w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-100">
-            <option value="male" selected>Male (+5)</option>
-            <option value="female">Female (-161)</option>
-          </select>
+          <label class="text-[11px] font-medium text-slate-300">Gemini Flash API Key (AQ... or AIzaSy...)</label>
+          <input type="password" id="cfgApiKey" placeholder="Paste your API key here" class="mt-1 w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-amber-400" />
         </div>
         <div>
-          <label class="text-xs text-slate-400">Age</label>
-          <input type="number" id="cfgAge" value="30" class="mt-1 w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-100" />
-        </div>
-        <div>
-          <label class="text-xs text-slate-400">Weight (lbs)</label>
-          <input type="number" id="cfgWeight" value="165" class="mt-1 w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-100" />
-        </div>
-        <div>
-          <label class="text-xs text-slate-400">Height (inches)</label>
-          <input type="number" id="cfgHeight" value="69" placeholder="69 = 5'9&quot;" class="mt-1 w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-100" />
-        </div>
-        <div>
-          <label class="text-xs text-slate-400">Activity Level</label>
-          <select id="cfgActivity" class="mt-1 w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-100">
-            <option value="1.2">Sedentary (1.2)</option>
-            <option value="1.375" selected>Lightly Active (1.375)</option>
-            <option value="1.55">Moderately Active (1.55)</option>
-            <option value="1.725">Very Active (1.725)</option>
-          </select>
-        </div>
-        <div>
-          <label class="text-xs text-slate-400">Plan Goal</label>
-          <select id="cfgGoal" class="mt-1 w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-100">
-            <option value="deficit" selected>Fat Loss (-500 kcal)</option>
-            <option value="maintain">Maintenance (0 kcal)</option>
-            <option value="surplus">Muscle Gain (+300 kcal)</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Private API, Webhook, and Sheet Link Configuration -->
-      <div class="pt-4 border-t border-slate-800 space-y-4">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div>
-            <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-              <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-              </svg>
-              Gemini Flash API Key
-            </label>
-            <p class="text-[11px] text-slate-500 mt-0.5">Stored locally in your browser. Used for AI macro estimation.</p>
-          </div>
-          <div class="w-full sm:w-auto flex-1 max-w-md">
-            <input type="password" id="cfgApiKey" placeholder="Paste your Gemini API key (AQ.Ab8...)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-amber-400" />
-          </div>
-        </div>
-
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div>
-            <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-              <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-              </svg>
-              Google Apps Script URL (Webhook)
-            </label>
-            <p class="text-[11px] text-slate-500 mt-0.5">Stored locally. The background script used to push data to Sheets.</p>
-          </div>
-          <div class="w-full sm:w-auto flex-1 max-w-md">
-            <input type="password" id="cfgScriptUrl" placeholder="Paste your Google Script URL (https://script.google.com/...)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-emerald-500" />
-          </div>
-        </div>
-
-        <!-- NEW: Direct link to Google Sheet -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div>
-            <label class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-              <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-              </svg>
-              Google Sheet Document Link
-            </label>
-            <p class="text-[11px] text-slate-500 mt-0.5">Paste the link to your actual spreadsheet here so the top button can open it.</p>
-          </div>
-          <div class="w-full sm:w-auto flex-1 max-w-md">
-            <input type="text" id="cfgSheetUrl" placeholder="https://docs.google.com/spreadsheets/d/..." class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-blue-500" />
-          </div>
+          <label class="text-[11px] font-medium text-slate-300">Google Apps Script Webhook URL</label>
+          <input type="text" id="cfgScriptUrl" value="https://script.google.com/macros/s/1Vb14IbNknP0MBn1JwK9FxbE66PVgjUH0iAW4h0MlzDmBADWYA-MzExS0/exec" class="mt-1 w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-100 focus:outline-none focus:border-emerald-500" />
         </div>
       </div>
     </div>
 
-    <!-- Macro Dashboard Cards -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
-        <div>
-          <div class="flex justify-between items-start">
-            <span class="text-xs font-medium text-slate-400">Calories</span>
-            <span id="calorieSub" class="text-[11px] text-slate-400 font-medium">Deficit: -1686 kcal</span>
-          </div>
-          <div class="mt-2 flex items-baseline gap-1">
-            <span id="caloriesConsumed" class="text-2xl font-bold text-white">650</span>
-            <span class="text-xs text-slate-400">/ <span id="targetCalories">1836</span> kcal</span>
-          </div>
-        </div>
-        <div class="mt-4">
-          <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-            <div id="calorieBar" class="h-full bg-emerald-500 transition-all duration-300" style="width: 35%"></div>
-          </div>
-          <div class="mt-1 flex justify-between text-[10px] text-slate-400">
-            <span id="caloriePercent">35% consumed</span>
-            <span id="calorieOverMsg" class="hidden text-rose-400 font-semibold">Exceeded</span>
-          </div>
-        </div>
-      </div>
+    <!-- Navigation Tabs -->
+    <div class="flex border-b border-slate-800">
+      <button onclick="switchTab('batchHub')" id="tabBatchHub" class="px-4 py-2.5 text-xs md:text-sm font-semibold text-emerald-400 border-b-2 border-emerald-500 transition">📦 Daily Batch Ingestion</button>
+      <button onclick="switchTab('recipeStudio')" id="tabRecipeStudio" class="px-4 py-2.5 text-xs md:text-sm font-semibold text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition">🧪 Recipe Studio & Database</button>
+    </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
-        <div>
-          <div class="flex justify-between items-start">
-            <span class="text-xs font-medium text-slate-400">Protein</span>
-            <span class="text-[11px] text-slate-500">30% split</span>
+    <!-- ========================================================================= -->
+    <!-- TAB 1: DAILY BATCH INGESTION HUB -->
+    <!-- ========================================================================= -->
+    <div id="viewBatchHub" class="space-y-5 pt-1">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        
+        <!-- Step 1: Ingestion Controls -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-4 shadow-lg">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <h3 class="text-xs font-semibold text-slate-100 uppercase tracking-wider">Step 1: Batch Details</h3>
+            <button onclick="fetchRecipesFromDB()" class="text-xs text-emerald-400 hover:text-emerald-300 font-medium flex items-center gap-1 cursor-pointer">
+              <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+              Refresh Recipes
+            </button>
           </div>
-          <div class="mt-2 flex items-baseline gap-1">
-            <span id="proteinConsumed" class="text-2xl font-bold text-white">65</span>
-            <span class="text-xs text-slate-400">/ <span id="targetProtein">138</span> g</span>
+          
+          <div>
+            <label class="text-[11px] text-slate-400 block mb-1">Select Master Recipe from Database</label>
+            <select id="activeRecipeSelect" onchange="loadRecipeToBatchHub()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-slate-100 focus:border-emerald-500 focus:outline-none">
+              <option value="">-- Load recipes from Drive --</option>
+            </select>
           </div>
-        </div>
-        <div class="mt-4">
-          <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-            <div id="proteinBar" class="h-full bg-sky-500 transition-all duration-300" style="width: 47%"></div>
-          </div>
-          <div class="mt-1 text-[10px] text-slate-400 text-right"><span id="proteinPercent">47%</span></div>
-        </div>
-      </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
-        <div>
-          <div class="flex justify-between items-start">
-            <span class="text-xs font-medium text-slate-400">Carbohydrates</span>
-            <span class="text-[11px] text-slate-500">40% split</span>
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="text-[11px] text-slate-400 block mb-1">Current Weight (lbs)</label>
+              <input type="number" id="currentWeight" step="0.1" placeholder="e.g. 211.5" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-sm text-amber-400 font-bold focus:border-emerald-500 focus:outline-none" />
+            </div>
+            <div>
+              <label class="text-[11px] text-slate-400 block mb-1">Extraction Date</label>
+              <input type="date" id="batchExtractionDate" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-slate-100 focus:outline-none" />
+            </div>
           </div>
-          <div class="mt-2 flex items-baseline gap-1">
-            <span id="carbsConsumed" class="text-2xl font-bold text-white">45</span>
-            <span class="text-xs text-slate-400">/ <span id="targetCarbs">184</span> g</span>
+          
+          <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800/80">
+            <div class="text-[10px] text-slate-400 uppercase tracking-wider mb-1.5 font-semibold">Included Daily Supplements:</div>
+            <div class="space-y-1 text-xs text-slate-300">
+              <div class="flex justify-between"><span>• Morning Medicine Shot</span><span class="text-slate-500">452.8 mg K+</span></div>
+              <div class="flex justify-between"><span>• Kirkland Organic Multi</span><span class="text-slate-500">945 mcg Vit A</span></div>
+              <div class="flex justify-between"><span>• Kirkland Turmeric Cap</span><span class="text-slate-500">Curcuminoids</span></div>
+            </div>
           </div>
         </div>
-        <div class="mt-4">
-          <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-            <div id="carbsBar" class="h-full bg-amber-500 transition-all duration-300" style="width: 24%"></div>
-          </div>
-          <div class="mt-1 text-[10px] text-slate-400 text-right"><span id="carbsPercent">24%</span></div>
-        </div>
-      </div>
 
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between">
-        <div>
-          <div class="flex justify-between items-start">
-            <span class="text-xs font-medium text-slate-400">Fat</span>
-            <span class="text-[11px] text-slate-500">30% split</span>
+        <!-- Step 2: Consolidated Payload Matrix -->
+        <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2 mb-3">
+              <h3 class="text-xs font-semibold text-slate-100 uppercase tracking-wider">Step 2: 24-Hour Consolidated Payload</h3>
+              <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800" id="batchYieldDisplay">Yield: --- | Daily: ---</span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border-collapse font-mono">
+                <thead>
+                  <tr class="border-b border-slate-800 text-slate-400 uppercase text-[9px]">
+                    <th class="py-2 px-1.5 font-sans font-semibold">Delivery Stream</th>
+                    <th class="py-2 px-1.5">Vit K1 (mcg)</th>
+                    <th class="py-2 px-1.5">Vit A (mcg)</th>
+                    <th class="py-2 px-1.5">Vit C (mg)</th>
+                    <th class="py-2 px-1.5">B9 (mcg)</th>
+                    <th class="py-2 px-1.5">K+ (mg)</th>
+                    <th class="py-2 px-1.5">Mg (mg)</th>
+                    <th class="py-2 px-1.5">Ca (mg)</th>
+                    <th class="py-2 px-1.5">Fe (mg)</th>
+                  </tr>
+                </thead>
+                <tbody id="batchMatrixBody" class="divide-y divide-slate-800/60 text-slate-300">
+                  <tr><td colspan="9" class="py-4 text-center text-slate-500 italic font-sans">Select a recipe to view matrix...</td></tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="mt-2 flex items-baseline gap-1">
-            <span id="fatConsumed" class="text-2xl font-bold text-white">19</span>
-            <span class="text-xs text-slate-400">/ <span id="targetFat">61</span> g</span>
+          
+          <div class="mt-5 pt-3 border-t border-slate-800 flex justify-end">
+            <button id="btnLogBatch" onclick="deployBatchToDrive()" disabled class="cursor-not-allowed opacity-50 px-4 py-2.5 rounded-xl font-bold bg-emerald-600 hover:bg-emerald-500 text-white text-xs md:text-sm shadow-lg transition flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+              <span id="btnLogBatchText">Confirm Batch N+1 (Pushes to Drive)</span>
+            </button>
           </div>
         </div>
-        <div class="mt-4">
-          <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-            <div id="fatBar" class="h-full bg-indigo-500 transition-all duration-300" style="width: 31%"></div>
-          </div>
-          <div class="mt-1 text-[10px] text-slate-400 text-right"><span id="fatPercent">31%</span></div>
-        </div>
+
       </div>
     </div>
 
-    <!-- Meal Sections Container -->
-    <div id="mealsContainer" class="space-y-6"></div>
+    <!-- ========================================================================= -->
+    <!-- TAB 2: RECIPE STUDIO & DATABASE -->
+    <!-- ========================================================================= -->
+    <div id="viewRecipeStudio" class="hidden space-y-5 pt-1">
+      <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+        
+        <!-- Left: Staging Form -->
+        <div class="xl:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <div>
+              <h3 class="text-xs font-semibold text-slate-100 uppercase tracking-wider flex items-center gap-2">
+                🧪 Recipe Staging Area
+              </h3>
+              <p class="text-[10px] text-slate-400">Add pieces, sizes, grams, or oz. Then calculate master batch.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="clearStudio()" class="text-[10px] text-slate-400 hover:text-white px-2 py-1 rounded border border-slate-700 cursor-pointer">Clear All</button>
+              <button id="btnAiCompute" onclick="computeMasterBatch()" class="cursor-pointer px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[11px] flex items-center gap-1.5 shadow-md transition">
+                <span id="aiIcon">✨ Compute Master Batch</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="text-[11px] text-slate-400 block mb-1">Recipe Name</label>
+              <input type="text" id="rsName" placeholder="e.g. CA-Alkaline Core 1800" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-amber-500" />
+            </div>
+            <div class="flex gap-2">
+              <div class="flex-1">
+                <label class="text-[11px] text-slate-400 block mb-1">Target Yield (ml)</label>
+                <input type="number" id="rsYield" value="1800" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-mono" />
+              </div>
+              <div class="flex-1">
+                <label class="text-[11px] text-slate-400 block mb-1">Portions (Days)</label>
+                <input type="number" id="rsPortions" value="4" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-mono" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Ingredient Form -->
+          <div class="p-3 bg-slate-950/70 border border-slate-800 rounded-xl grid grid-cols-1 sm:grid-cols-12 gap-2 items-end">
+            <div class="sm:col-span-3">
+              <label class="text-[10px] text-slate-400 font-medium">Vegetable Group</label>
+              <select id="rsIngGroup" onchange="updateItemOptions()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white">
+                <option value="Hydration Bulk">Group 1: Hydration Bulk</option>
+                <option value="Leafy Vanguard">Group 2 & 5: Leafy Vanguard</option>
+                <option value="Cruciferous Nrf2">Group 3: Cruciferous Nrf2</option>
+                <option value="Glucose Clamp">Group 4: Glucose Clamp</option>
+                <option value="Flavor Balancer">Group 6 & 7: Fruit Acids & Flavor</option>
+              </select>
+            </div>
+
+            <div class="sm:col-span-3">
+              <label class="text-[10px] text-slate-400 font-medium">Vegetable / Fruit</label>
+              <select id="rsIngSelect" onchange="checkCustomOption()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white">
+              </select>
+              <input type="text" id="rsIngCustomName" placeholder="Type custom name" class="hidden mt-1 w-full bg-slate-950 border border-amber-500 rounded-lg px-2 py-1 text-xs text-amber-300 focus:outline-none" />
+            </div>
+
+            <div class="sm:col-span-2">
+              <label class="text-[10px] text-slate-400 font-medium">Quantity</label>
+              <input type="number" id="rsIngQty" step="any" placeholder="e.g. 2" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white" />
+            </div>
+
+            <div class="sm:col-span-2">
+              <label class="text-[10px] text-slate-400 font-medium">Unit / Size</label>
+              <select id="rsIngUnit" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white">
+                <option value="Whole Medium" selected>Whole Medium</option>
+                <option value="Whole Large">Whole Large</option>
+                <option value="Whole Small">Whole Small</option>
+                <option value="grams">grams (g)</option>
+                <option value="oz">ounces (oz)</option>
+                <option value="Full Bunch">Full Bunch</option>
+                <option value="Stalks / Ribs">Stalks / Ribs</option>
+                <option value="Pieces / Rings">Pieces / Rings</option>
+                <option value="Cups Sliced">Cups Sliced</option>
+              </select>
+            </div>
+
+            <div class="sm:col-span-2 flex gap-1">
+              <div class="flex-1">
+                <label class="text-[10px] text-slate-400 font-medium">Notes</label>
+                <input type="text" id="rsIngNotes" placeholder="Optional" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-white" />
+              </div>
+              <button type="button" onclick="rsAddIngredient()" class="mt-4 px-3 bg-emerald-700 hover:bg-emerald-600 border border-emerald-600 text-white rounded-lg text-xs font-bold cursor-pointer transition" title="Add to Staging Area">+</button>
+            </div>
+          </div>
+
+          <!-- Staged Ingredients Table -->
+          <div class="border border-slate-800 rounded-xl overflow-hidden">
+            <div class="bg-slate-950/80 px-3 py-1.5 text-[10px] font-semibold text-slate-400 uppercase flex justify-between">
+              <span>Staged Ingredients for this Batch</span>
+              <span id="stagedCount">0 items staged</span>
+            </div>
+            <div id="rsIngredientList" class="max-h-56 overflow-y-auto divide-y divide-slate-800/60 p-1">
+              <p class="text-xs text-slate-500 italic p-3 text-center">No ingredients staged yet. Use the selector above to build your recipe.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Batch Matrix Results -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2 mb-3">
+              <h3 class="text-xs font-semibold text-slate-100 uppercase tracking-wider">Computed Master Batch Matrix</h3>
+              <span id="resYieldStatus" class="text-[9px] font-mono text-emerald-400">Est. Yield: -- ml</span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2 mb-3">
+              <div class="p-2 bg-slate-950 border border-slate-800/80 rounded-lg">
+                <div class="text-[9px] text-slate-500 uppercase">Batch Vit K1</div>
+                <div class="text-xs font-bold text-emerald-400 font-mono" id="resK1">-- mcg</div>
+              </div>
+              <div class="p-2 bg-slate-950 border border-slate-800/80 rounded-lg">
+                <div class="text-[9px] text-slate-500 uppercase">Batch Vit A (RAE)</div>
+                <div class="text-xs font-bold text-sky-400 font-mono" id="resA">-- mcg</div>
+              </div>
+              <div class="p-2 bg-slate-950 border border-slate-800/80 rounded-lg">
+                <div class="text-[9px] text-slate-500 uppercase">Batch Vit C</div>
+                <div class="text-xs font-bold text-amber-400 font-mono" id="resC">-- mg</div>
+              </div>
+              <div class="p-2 bg-slate-950 border border-slate-800/80 rounded-lg">
+                <div class="text-[9px] text-slate-500 uppercase">Batch Folate (B9)</div>
+                <div class="text-xs font-bold text-teal-400 font-mono" id="resB9">-- mcg</div>
+              </div>
+              <div class="p-2 bg-slate-950 border border-slate-800/80 rounded-lg">
+                <div class="text-[9px] text-slate-500 uppercase">Batch Potassium</div>
+                <div class="text-xs font-bold text-indigo-400 font-mono" id="resK">-- mg</div>
+              </div>
+              <div class="p-2 bg-slate-950 border border-slate-800/80 rounded-lg">
+                <div class="text-[9px] text-slate-500 uppercase">Batch Magnesium</div>
+                <div class="text-xs font-bold text-slate-300 font-mono" id="resMg">-- mg</div>
+              </div>
+              <div class="p-2 bg-slate-950 border border-slate-800/80 rounded-lg">
+                <div class="text-[9px] text-slate-500 uppercase">Batch Calcium</div>
+                <div class="text-xs font-bold text-orange-400 font-mono" id="resCa">-- mg</div>
+              </div>
+              <div class="p-2 bg-slate-950 border border-slate-800/80 rounded-lg">
+                <div class="text-[9px] text-slate-500 uppercase">Batch Iron</div>
+                <div class="text-xs font-bold text-rose-400 font-mono" id="resFe">-- mg</div>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-[10px] text-slate-400">Biological Purpose</label>
+              <textarea id="resPurpose" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-[11px] text-slate-300 resize-none focus:outline-none" readonly></textarea>
+              
+              <label class="text-[10px] text-slate-400">Taste & Flavor Profile</label>
+              <input type="text" id="resTaste" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-[11px] text-slate-300 focus:outline-none" readonly />
+            </div>
+          </div>
+          
+          <div class="mt-4 pt-3 border-t border-slate-800 space-y-2">
+            <input type="hidden" id="rsActiveId" value="" />
+            <button id="btnSaveDB" onclick="saveRecipeToDB()" disabled class="w-full cursor-not-allowed opacity-50 px-4 py-2 rounded-xl font-bold bg-sky-600 hover:bg-sky-500 text-white text-xs shadow-md transition">
+              💾 Save New Recipe to Database
+            </button>
+            <p class="text-[10px] text-slate-500 text-center">Batch formula is validated before database commit.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
 
   </div>
 
   <script>
-    const defaultData = {
-      Breakfast: [],
-      Lunch: [],
-      Dinner: [],
-      Snacks: []
-    };
-
-    function safeLoadStorage(key, fallback) {
-      try {
-        if (typeof window !== 'undefined' && window.localStorage) {
-          const raw = localStorage.getItem(key);
-          if (raw) {
-            const parsed = JSON.parse(raw);
-            if (parsed) return parsed;
-          }
-        }
-      } catch (err) {
-        console.warn("Storage read disabled, falling back to session memory:", err);
-      }
-      return fallback;
-    }
-
-    function safeSaveStorage(key, value) {
-      try {
-        if (typeof window !== 'undefined' && window.localStorage) {
-          localStorage.setItem(key, JSON.stringify(value));
-        }
-      } catch (err) {
-        console.warn("Storage write failed:", err);
-      }
-    }
-
-    let meals = safeLoadStorage('macro_meals_db', defaultData);
-    let targets = { tdee: 2336, calories: 1836, protein: 138, carbs: 184, fat: 61 };
-    let activeOpenForm = null;
-    let editingItemId = null;
-
-    function toggleSettings() {
-      const panel = document.getElementById('settingsPanel');
-      if (!panel) return;
-      panel.classList.toggle('hidden');
-    }
-
-    function updateTargets() {
-      try {
-        const genderEl = document.getElementById('cfgGender');
-        const ageEl = document.getElementById('cfgAge');
-        const weightEl = document.getElementById('cfgWeight');
-        const heightEl = document.getElementById('cfgHeight');
-        const activityEl = document.getElementById('cfgActivity');
-        const goalEl = document.getElementById('cfgGoal');
-
-        if (!genderEl || !ageEl || !weightEl || !heightEl || !activityEl || !goalEl) return;
-
-        const gender = genderEl.value;
-        const age = Number(ageEl.value) || 30;
-        const weightLbs = Number(weightEl.value) || 165;
-        const heightInches = Number(heightEl.value) || 69;
-        const activity = Number(activityEl.value) || 1.375;
-        const goal = goalEl.value;
-
-        // Imperial to Metric conversion
-        const weightKg = weightLbs * 0.45359237;
-        const heightCm = heightInches * 2.54;
-
-        let bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age);
-        bmr += (gender === 'male' ? 5 : -161);
-        const tdee = Math.round(bmr * activity);
-
-        let targetCal = tdee;
-        if (goal === 'deficit') targetCal -= 500;
-        if (goal === 'surplus') targetCal += 300;
-
-        targets = {
-          tdee,
-          calories: targetCal,
-          protein: Math.round((targetCal * 0.30) / 4),
-          carbs: Math.round((targetCal * 0.40) / 4),
-          fat: Math.round((targetCal * 0.30) / 9)
-        };
-
-        renderDashboard();
-      } catch (err) {
-        console.error("Error computing targets:", err);
-      }
-    }
-
-    function renderDashboard() {
-      try {
-        let totals = { calories: 0, protein: 0, carbs: 0, fat: 0 };
-
-        Object.values(meals).forEach(mealArray => {
-          if (Array.isArray(mealArray)) {
-            mealArray.forEach(item => {
-              totals.calories += Number(item.calories) || 0;
-              totals.protein += Number(item.protein) || 0;
-              totals.carbs += Number(item.carbs) || 0;
-              totals.fat += Number(item.fat) || 0;
-            });
-          }
-        });
-
-        document.getElementById('caloriesConsumed').innerText = totals.calories;
-        document.getElementById('targetCalories').innerText = targets.calories;
-
-        const remaining = targets.calories - totals.calories;
-        if (remaining >= 0) {
-          document.getElementById('calorieSub').innerText = `${remaining} kcal remaining`;
-          document.getElementById('calorieSub').className = "text-[11px] text-emerald-400 font-medium";
-        } else {
-          document.getElementById('calorieSub').innerText = `+${Math.abs(remaining)} kcal over target`;
-          document.getElementById('calorieSub').className = "text-[11px] text-rose-400 font-semibold";
-        }
-
-        const calPct = Math.min(Math.round((totals.calories / (targets.calories || 1)) * 100), 100);
-        const calBar = document.getElementById('calorieBar');
-        calBar.style.width = calPct + '%';
-        document.getElementById('caloriePercent').innerText = `${calPct}% consumed`;
-
-        if (totals.calories > targets.calories) {
-          calBar.className = 'h-full bg-rose-500 transition-all duration-300';
-          document.getElementById('calorieOverMsg').classList.remove('hidden');
-        } else {
-          calBar.className = 'h-full bg-emerald-500 transition-all duration-300';
-          document.getElementById('calorieOverMsg').classList.add('hidden');
-        }
-
-        document.getElementById('proteinConsumed').innerText = totals.protein;
-        document.getElementById('targetProtein').innerText = targets.protein;
-        const protPct = Math.min(Math.round((totals.protein / (targets.protein || 1)) * 100), 100);
-        document.getElementById('proteinBar').style.width = protPct + '%';
-        document.getElementById('proteinPercent').innerText = `${protPct}%`;
-
-        document.getElementById('carbsConsumed').innerText = totals.carbs;
-        document.getElementById('targetCarbs').innerText = targets.carbs;
-        const carbPct = Math.min(Math.round((totals.carbs / (targets.carbs || 1)) * 100), 100);
-        document.getElementById('carbsBar').style.width = carbPct + '%';
-        document.getElementById('carbsPercent').innerText = `${carbPct}%`;
-
-        document.getElementById('fatConsumed').innerText = totals.fat;
-        document.getElementById('targetFat').innerText = targets.fat;
-        const fatPct = Math.min(Math.round((totals.fat / (targets.fat || 1)) * 100), 100);
-        document.getElementById('fatBar').style.width = fatPct + '%';
-        document.getElementById('fatPercent').innerText = `${fatPct}%`;
-      } catch (err) {
-        console.error("Dashboard render failed:", err);
-      }
-    }
-
-    function renderMeals() {
-      const container = document.getElementById('mealsContainer');
-      if (!container) return;
-      container.innerHTML = '';
-
-      Object.entries(meals).forEach(([category, items]) => {
-        const catCalories = (items || []).reduce((sum, item) => sum + (Number(item.calories) || 0), 0);
-
-        const card = document.createElement('div');
-        card.className = "bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm";
-
-        let itemsHtml = (items && items.length > 0) ? items.map(item => `
-          <div class="py-3 flex items-center justify-between border-b border-slate-800/60 last:border-b-0">
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="font-medium text-slate-200 text-sm">${item.food}</span>
-                <span class="text-[10px] font-semibold uppercase px-2 py-0.5 rounded ${
-                  item.state === 'Raw' ? 'bg-amber-950/60 text-amber-300 border border-amber-900/40' : 'bg-blue-950/60 text-blue-300 border border-blue-900/40'
-                }">${item.state}</span>
-              </div>
-              <p class="text-xs text-slate-400 mt-0.5">
-                ${item.portion} ${item.notes ? `• ${item.notes}` : ''}
-              </p>
-            </div>
-            <div class="flex items-center gap-2">
-              <div class="text-right text-xs pr-2">
-                <div class="font-semibold text-slate-200">${item.calories} kcal</div>
-                <div class="text-slate-400 font-mono text-[11px]">P: ${item.protein}g | C: ${item.carbs}g | F: ${item.fat}g</div>
-              </div>
-              
-              <!-- Edit Button -->
-              <button onclick="window.editItem('${category}', '${item.id}')" class="text-slate-500 hover:text-amber-400 p-1 transition cursor-pointer" title="Edit Item">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                </svg>
-              </button>
-              
-              <!-- Delete Button -->
-              <button onclick="window.deleteItem('${category}', '${item.id}')" class="text-slate-500 hover:text-rose-400 p-1 transition cursor-pointer" title="Delete Item">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                </svg>
-              </button>
-            </div>
-          </div>
-        `).join('') : `<p class="text-xs text-slate-500 py-2 italic">No entries logged yet.</p>`;
-
-        card.innerHTML = `
-          <div class="flex justify-between items-center mb-3">
-            <div class="flex items-center gap-3">
-              <h2 class="text-base font-semibold text-slate-100">${category}</h2>
-              <span class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400">${catCalories} kcal</span>
-            </div>
-            <button onclick="window.toggleAddForm('${category}')" class="cursor-pointer flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
-              ${activeOpenForm === category && !editingItemId ? 'Cancel' : 'Add Food'}
-            </button>
-          </div>
-
-          <div class="space-y-1">${itemsHtml}</div>
-
-          <!-- Inline Form -->
-          <div id="form_${category}" class="${activeOpenForm === category ? '' : 'hidden'} mt-4 p-4 rounded-xl ${editingItemId ? 'bg-amber-950/20 border-amber-900/50' : 'bg-slate-950/70 border-slate-800'} border space-y-3">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div class="md:col-span-2 relative">
-                <label class="text-xs text-slate-400 font-medium">Food Name & Description</label>
-                <div class="relative mt-1">
-                  <input type="text" id="food_${category}" placeholder="e.g., 6 oz raw salmon fillet, 1 cup cooked rice" class="w-full bg-slate-900 border border-slate-700 rounded-lg pl-3 pr-10 py-2 text-xs text-slate-100 focus:outline-none focus:border-emerald-500" />
-                  
-                  <button type="button" id="sparkleBtn_${category}" onclick="window.estimateWithAI('${category}')" title="Estimate macros with Gemini Flash" class="cursor-pointer absolute right-2.5 top-2 text-amber-400 hover:text-amber-300 transition">
-                    <svg id="sparkleIcon_${category}" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                    </svg>
-                    <svg id="spinnerIcon_${category}" class="hidden w-4 h-4 animate-spin text-amber-400" fill="none" viewBox="0 0 24 24">
-                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-              <div>
-                <label class="text-xs text-slate-400 font-medium">Portion / Weight</label>
-                <input type="text" id="portion_${category}" placeholder="e.g., 6 oz, 1.5 cups" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-emerald-500" />
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-              <div>
-                <label class="text-xs text-slate-400 font-medium">State</label>
-                <select id="state_${category}" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-slate-100">
-                  <option value="Raw">Raw / Dry</option>
-                  <option value="Cooked">Cooked</option>
-                </select>
-              </div>
-              <div>
-                <label class="text-xs text-slate-400 font-medium">Calories</label>
-                <input type="number" id="cal_${category}" placeholder="0" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100" />
-              </div>
-              <div>
-                <label class="text-xs text-slate-400 font-medium">Protein (g)</label>
-                <input type="number" id="prot_${category}" placeholder="0" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100" />
-              </div>
-              <div>
-                <label class="text-xs text-slate-400 font-medium">Carbs (g)</label>
-                <input type="number" id="carb_${category}" placeholder="0" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100" />
-              </div>
-              <div>
-                <label class="text-xs text-slate-400 font-medium">Fat (g)</label>
-                <input type="number" id="fat_${category}" placeholder="0" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100" />
-              </div>
-            </div>
-
-            <div>
-              <label class="text-xs text-slate-400 font-medium">Cooking Notes (oils, dressings, seasonings)</label>
-              <input type="text" id="notes_${category}" placeholder="e.g., Cooked in 1 tbsp butter, seasoned with garlic" class="mt-1 w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-100" />
-            </div>
-
-            <div class="flex justify-end gap-2 pt-2">
-              <button onclick="window.toggleAddForm('${category}')" type="button" class="cursor-pointer px-3.5 py-1.5 text-xs text-slate-400 hover:text-white">Cancel</button>
-              <button onclick="window.submitItem('${category}')" type="button" class="cursor-pointer px-4 py-1.5 text-xs font-semibold rounded-lg ${editingItemId ? 'bg-amber-600 hover:bg-amber-500' : 'bg-emerald-600 hover:bg-emerald-500'} text-white shadow-sm transition">
-                ${editingItemId ? 'Update Item' : 'Save Item'}
-              </button>
-            </div>
-          </div>
-        `;
-
-        container.appendChild(card);
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration:', err));
       });
     }
 
-    function toggleAddForm(category) {
-      activeOpenForm = activeOpenForm === category ? null : category;
-      editingItemId = null;
-      renderMeals();
+    // ==========================================
+    // LOCAL USDA FOODDATA CENTRAL DATABASE
+    // Nutrients per 100g raw edible portion
+    // ==========================================
+    const USDA_DB = {
+      "Cucumber":             { k1: 16.4, a: 5.0, c: 2.8, b9: 7.0, k: 147, mg: 13, ca: 16, fe: 0.28, yield: 0.90, med: 300, lrg: 400, sm: 200 },
+      "Zucchini":             { k1: 4.3,  a: 10.0, c: 17.9, b9: 24.0, k: 261, mg: 18, ca: 16, fe: 0.37, yield: 0.88, med: 200, lrg: 300, sm: 130 },
+      "Ash Gourd":            { k1: 5.0,  a: 0.0,  c: 13.0, b9: 15.0, k: 160, mg: 11, ca: 19, fe: 0.40, yield: 0.92, med: 350, lrg: 500, sm: 250 },
+      "Bottle Gourd (Lauki)": { k1: 4.0,  a: 0.0,  c: 10.1, b9: 12.0, k: 150, mg: 11, ca: 26, fe: 0.20, yield: 0.90, med: 350, lrg: 500, sm: 250 },
+      "Celery Stalks":        { k1: 29.3, a: 22.0, c: 3.1,  b9: 36.0, k: 260, mg: 11, ca: 40, fe: 0.20, yield: 0.85, med: 40,  lrg: 60,  sm: 30 },
+      "Yellow Summer Squash": { k1: 4.3,  a: 10.0, c: 17.0, b9: 23.0, k: 250, mg: 17, ca: 15, fe: 0.35, yield: 0.88, med: 200, lrg: 300, sm: 130 },
+      "Chayote Squash":       { k1: 4.1,  a: 3.0,  c: 7.7,  b9: 93.0, k: 125, mg: 12, ca: 17, fe: 0.34, yield: 0.85, med: 200, lrg: 300, sm: 130 },
+      "Romaine Lettuce Hearts":{ k1: 102.5, a: 436, c: 4.0, b9: 136,  k: 247, mg: 14, ca: 33, fe: 0.97, yield: 0.80, med: 150, lrg: 220, sm: 100 },
+      "Ridge Gourd":          { k1: 4.0,  a: 8.0,  c: 12.0, b9: 15.0, k: 140, mg: 14, ca: 18, fe: 0.36, yield: 0.85, med: 200, lrg: 300, sm: 130 },
+      "Watermelon Rind":      { k1: 0.1,  a: 28.0, c: 8.1,  b9: 3.0,  k: 112, mg: 10, ca: 10, fe: 0.24, yield: 0.90, med: 250, lrg: 400, sm: 150 },
+      
+      "Flat-Leaf Parsley":    { k1: 1640.0, a: 421.0, c: 133.0, b9: 152.0, k: 554, mg: 50, ca: 138, fe: 6.20, yield: 0.65, bunch: 60 },
+      "Cilantro":             { k1: 310.0,  a: 337.0, c: 27.0,  b9: 62.0,  k: 521, mg: 26, ca: 67,  fe: 1.77, yield: 0.65, bunch: 50 },
+      "Red Chard":            { k1: 830.0,  a: 306.0, c: 30.0,  b9: 14.0,  k: 379, mg: 81, ca: 51,  fe: 1.80, yield: 0.70, bunch: 150 },
+      "Baby Kale":            { k1: 389.0,  a: 241.0, c: 93.4,  b9: 62.0,  k: 447, mg: 34, ca: 254, fe: 1.60, yield: 0.65, bunch: 100 },
+      "Arugula":              { k1: 108.6,  a: 119.0, c: 15.0,  b9: 97.0,  k: 369, mg: 47, ca: 160, fe: 1.46, yield: 0.60, bunch: 80 },
+      "Fresh Mint Leaves":    { k1: 0.0,    a: 212.0, c: 31.8,  b9: 105.0, k: 569, mg: 80, ca: 243, fe: 5.08, yield: 0.55, bunch: 40 },
+      "Baby Spinach":         { k1: 483.0,  a: 469.0, c: 28.1,  b9: 194.0, k: 558, mg: 79, ca: 99,  fe: 2.71, yield: 0.68, bunch: 100 },
+      "Dandelion Greens":     { k1: 778.0,  a: 508.0, c: 35.0,  b9: 180.0, k: 397, mg: 36, ca: 187, fe: 3.10, yield: 0.60, bunch: 80 },
+      "Fresh Wheatgrass":     { k1: 80.0,   a: 120.0, c: 25.0,  b9: 45.0,  k: 380, mg: 30, ca: 35,  fe: 1.50, yield: 0.60, bunch: 50 },
+      "Sweet Basil":          { k1: 414.8,  a: 264.0, c: 18.0,  b9: 68.0,  k: 295, mg: 64, ca: 177, fe: 3.17, yield: 0.55, bunch: 40 },
+
+      "Broccoli Stalks":      { k1: 101.6, a: 31.0, c: 89.2, b9: 63.0, k: 316, mg: 21, ca: 47, fe: 0.73, yield: 0.72, med: 75, lrg: 100, sm: 50 },
+      "Broccoli Florets":     { k1: 101.6, a: 31.0, c: 89.2, b9: 63.0, k: 316, mg: 21, ca: 47, fe: 0.73, yield: 0.65, med: 150, lrg: 200, sm: 100 },
+      "Brussels Sprouts":     { k1: 177.0, a: 38.0, c: 85.0, b9: 61.0, k: 389, mg: 23, ca: 42, fe: 1.40, yield: 0.70, piece: 20 },
+      "Collard Greens":       { k1: 437.0, a: 251.0, c: 35.3, b9: 129.0, k: 213, mg: 27, ca: 232, fe: 0.47, yield: 0.65, bunch: 120 },
+      "Red Cabbage":          { k1: 38.2,  a: 56.0,  c: 57.0, b9: 18.0,  k: 243, mg: 16, ca: 45, fe: 0.80, yield: 0.75, med: 300, lrg: 500, sm: 200 },
+      "Green Cabbage":        { k1: 76.0,  a: 5.0,   c: 36.6, b9: 43.0,  k: 170, mg: 12, ca: 40, fe: 0.47, yield: 0.75, med: 300, lrg: 500, sm: 200 },
+      "Cauliflower Stalks":   { k1: 15.5,  a: 0.0,   c: 48.2, b9: 57.0,  k: 299, mg: 15, ca: 22, fe: 0.42, yield: 0.70, med: 100, lrg: 150, sm: 70 },
+      "Baby Bok Choy":        { k1: 45.5,  a: 223.0, c: 45.0, b9: 66.0,  k: 252, mg: 19, ca: 105, fe: 0.80, yield: 0.78, med: 120, lrg: 180, sm: 80 },
+      "Watercress":           { k1: 250.0, a: 160.0, c: 43.0, b9: 9.0,   k: 330, mg: 21, ca: 120, fe: 0.20, yield: 0.65, bunch: 50 },
+      "Daikon Radish":        { k1: 0.3,   a: 0.0,   c: 22.0, b9: 28.0,  k: 227, mg: 16, ca: 27,  fe: 0.40, yield: 0.82, med: 250, lrg: 400, sm: 150 },
+
+      "Bitter Gourd (Karela)":{ k1: 0.0,  a: 24.0, c: 84.0, b9: 72.0, k: 296, mg: 17, ca: 19, fe: 0.43, yield: 0.60, piece: 15, med: 60 },
+      "Cactus Strips (Nopal)":{ k1: 0.0,  a: 23.0, c: 9.3,  b9: 3.0,  k: 257, mg: 52, ca: 164, fe: 0.59, yield: 0.65, piece: 40 },
+      "Fenugreek Leaves (Methi)":{ k1: 150.0, a: 180.0, c: 52.0, b9: 80.0, k: 370, mg: 40, ca: 150, fe: 3.50, yield: 0.55, bunch: 50 },
+      "Fenugreek Sprouts":    { k1: 90.0,  a: 120.0, c: 22.0, b9: 60.0, k: 280, mg: 30, ca: 80,  fe: 2.10, yield: 0.55, cup: 80 },
+      "Artichoke Hearts":     { k1: 14.8, a: 1.0,   c: 7.4,  b9: 68.0, k: 370, mg: 60, ca: 44,  fe: 1.28, yield: 0.55, piece: 40 },
+      "Belgian Endive":       { k1: 231.0, a: 108.0, c: 6.5,  b9: 142.0, k: 314, mg: 15, ca: 52, fe: 0.83, yield: 0.70, med: 80 },
+      "Chicory Greens":       { k1: 297.6, a: 286.0, c: 24.0, b9: 110.0, k: 420, mg: 30, ca: 100, fe: 0.90, yield: 0.65, bunch: 80 },
+      "Mustard Greens":       { k1: 257.5, a: 151.0, c: 70.0, b9: 187.0, k: 384, mg: 32, ca: 115, fe: 1.64, yield: 0.65, bunch: 80 },
+      "Radicchio":            { k1: 255.2, a: 1.0,   c: 8.0,  b9: 60.0,  k: 302, mg: 13, ca: 19,  fe: 0.57, yield: 0.65, med: 100 },
+
+      "Green Apple (Granny Smith)": { k1: 3.2, a: 3.0, c: 4.6, b9: 3.0, k: 107, mg: 5, ca: 6, fe: 0.12, yield: 0.78, med: 180, lrg: 240, sm: 130 },
+      "Lemon (Peeled)":       { k1: 0.0, a: 1.0,   c: 38.7, b9: 11.0, k: 103, mg: 6,  ca: 26, fe: 0.60, yield: 0.70, med: 60, lrg: 85, sm: 45 },
+      "Lime (Peeled)":        { k1: 0.0, a: 1.0,   c: 29.1, b9: 8.0,  k: 102, mg: 6,  ca: 33, fe: 0.60, yield: 0.70, med: 50, lrg: 70, sm: 35 },
+      "Fresh Ginger Root":    { k1: 0.1, a: 0.0,   c: 5.0,  b9: 11.0, k: 415, mg: 43, ca: 16, fe: 0.60, yield: 0.60, med: 15, piece: 10 },
+      "Fresh Turmeric Root":  { k1: 0.1, a: 0.0,   c: 26.0, b9: 10.0, k: 2525, mg: 193, ca: 182, fe: 41.4, yield: 0.55, med: 15, piece: 10 },
+      "Carrots":              { k1: 13.2, a: 835.0, c: 5.9,  b9: 19.0, k: 320, mg: 12, ca: 33, fe: 0.30, yield: 0.68, med: 60, lrg: 85, sm: 40 },
+      "Kumquats":             { k1: 0.0,  a: 15.0, c: 43.9, b9: 17.0, k: 186, mg: 20, ca: 62, fe: 0.86, yield: 0.70, piece: 19 },
+      "Fresh Beetroot":       { k1: 0.2,  a: 2.0,   c: 4.9,  b9: 109.0, k: 325, mg: 23, ca: 16, fe: 0.80, yield: 0.65, med: 150, lrg: 220, sm: 100 },
+      "Bosc Pear":            { k1: 4.5,  a: 1.0,   c: 4.2,  b9: 7.0,   k: 119, mg: 7,  ca: 9,  fe: 0.17, yield: 0.75, med: 180, lrg: 240, sm: 130 },
+      "Orange (Peeled)":      { k1: 0.0,  a: 11.0, c: 53.2, b9: 30.0, k: 181, mg: 10, ca: 40, fe: 0.10, yield: 0.78, med: 130, lrg: 180, sm: 90 }
+    };
+
+    const VEG_TAXONOMY = {
+      "Hydration Bulk": [
+        "Cucumber", "Zucchini", "Ash Gourd", "Bottle Gourd (Lauki)", "Celery Stalks",
+        "Yellow Summer Squash", "Chayote Squash", "Romaine Lettuce Hearts", "Ridge Gourd", "Watermelon Rind", "Custom"
+      ],
+      "Leafy Vanguard": [
+        "Flat-Leaf Parsley", "Cilantro", "Red Chard", "Baby Kale", "Arugula",
+        "Fresh Mint Leaves", "Baby Spinach", "Dandelion Greens", "Fresh Wheatgrass", "Sweet Basil", "Custom"
+      ],
+      "Cruciferous Nrf2": [
+        "Broccoli Stalks", "Broccoli Floreets", "Brussels Sprouts", "Collard Greens", "Red Cabbage",
+        "Green Cabbage", "Cauliflower Stalks", "Baby Bok Choy", "Watercress", "Daikon Radish", "Custom"
+      ],
+      "Glucose Clamp": [
+        "Bitter Gourd (Karela)", "Cactus Strips (Nopal)", "Fenugreek Leaves (Methi)", "Fenugreek Sprouts",
+        "Artichoke Hearts", "Belgian Endive", "Chicory Greens", "Mustard Greens", "Radicchio", "Custom"
+      ],
+      "Flavor Balancer": [
+        "Green Apple (Granny Smith)", "Lemon (Peeled)", "Lime (Peeled)", "Fresh Ginger Root",
+        "Fresh Turmeric Root", "Carrots", "Kumquats", "Fresh Beetroot", "Bosc Pear", "Orange (Peeled)", "Custom"
+      ]
+    };
+
+    function updateItemOptions() {
+      const grp = document.getElementById('rsIngGroup').value;
+      const itemSelect = document.getElementById('rsIngSelect');
+      const items = VEG_TAXONOMY[grp] || [];
+      
+      itemSelect.innerHTML = items.map(item => `<option value="${item}">${item === 'Custom' ? '✏️ Custom (Type Name)' : item}</option>`).join('');
+      checkCustomOption();
     }
 
-    function editItem(category, id) {
-      const item = meals[category].find(i => i.id === id);
-      if (!item) return;
-
-      activeOpenForm = category;
-      editingItemId = id;
-      renderMeals();
-
-      document.getElementById(`food_${category}`).value = item.food;
-      document.getElementById(`portion_${category}`).value = item.portion || '';
-      document.getElementById(`state_${category}`).value = item.state || 'Raw';
-      document.getElementById(`cal_${category}`).value = item.calories || 0;
-      document.getElementById(`prot_${category}`).value = item.protein || 0;
-      document.getElementById(`carb_${category}`).value = item.carbs || 0;
-      document.getElementById(`fat_${category}`).value = item.fat || 0;
-      document.getElementById(`notes_${category}`).value = item.notes || '';
+    function checkCustomOption() {
+      const itemSelect = document.getElementById('rsIngSelect');
+      const customInput = document.getElementById('rsIngCustomName');
+      if (itemSelect.value === 'Custom') {
+        customInput.classList.remove('hidden');
+        customInput.focus();
+      } else {
+        customInput.classList.add('hidden');
+        customInput.value = '';
+      }
     }
 
-    async function estimateWithAI(category) {
-      const foodInput = document.getElementById(`food_${category}`);
-      if (!foodInput || !foodInput.value.trim()) {
-        alert("Please enter a food name first (e.g., '6 oz raw salmon fillet' or '1 cup cooked rice').");
+    const FIXED_SUPPLEMENTS = {
+      shot:  { k1: 2.0,  a: 0.2,   c: 10.4, b9: 1.0,   k: 452.8, mg: 18.0, ca: 15.0, fe: 0.8 },
+      multi: { k1: 20.8, a: 945.0, c: 90.0, b9: 400.0, k: 0.0,   mg: 25.0, ca: 50.0, fe: 9.0 },
+      turm:  { k1: 2.0,  a: 0.0,   c: 0.0,  b9: 0.0,   k: 15.0,  mg: 5.0,  ca: 5.0,  fe: 0.3 }
+    };
+
+    let activeTab = 'batchHub';
+    let dbRecipes = []; 
+    let studioIngredients = []; 
+    let studioMatrix = null; 
+    let activeBatchRows = [];
+
+    function switchTab(tab) {
+      activeTab = tab;
+      document.getElementById('viewBatchHub').classList.toggle('hidden', tab !== 'batchHub');
+      document.getElementById('viewRecipeStudio').classList.toggle('hidden', tab !== 'recipeStudio');
+      
+      document.getElementById('tabBatchHub').className = tab === 'batchHub' 
+        ? 'px-4 py-2.5 text-xs md:text-sm font-semibold text-emerald-400 border-b-2 border-emerald-500 transition' 
+        : 'px-4 py-2.5 text-xs md:text-sm font-semibold text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition';
+        
+      document.getElementById('tabRecipeStudio').className = tab === 'recipeStudio' 
+        ? 'px-4 py-2.5 text-xs md:text-sm font-semibold text-emerald-400 border-b-2 border-emerald-500 transition' 
+        : 'px-4 py-2.5 text-xs md:text-sm font-semibold text-slate-400 border-b-2 border-transparent hover:text-slate-200 transition';
+    }
+
+    document.getElementById('toggleSettingsBtn').addEventListener('click', () => {
+      document.getElementById('settingsPanel').classList.toggle('hidden');
+    });
+
+    function safeStorage(key, val) {
+      if (val !== undefined) localStorage.setItem(key, val);
+      return localStorage.getItem(key) || "";
+    }
+    
+    function showBanner(msg, isError=false) {
+      const b = document.getElementById('statusBanner');
+      b.innerText = msg;
+      b.className = `p-3 rounded-xl border block text-xs md:text-sm font-medium ${isError ? 'bg-rose-950/80 border-rose-800 text-rose-200' : 'bg-emerald-950/80 border-emerald-800 text-emerald-200'}`;
+      setTimeout(() => b.classList.add('hidden'), 5000);
+    }
+
+    function rsAddIngredient() {
+      const grp = document.getElementById('rsIngGroup').value;
+      const selectVal = document.getElementById('rsIngSelect').value;
+      const customVal = document.getElementById('rsIngCustomName').value.trim();
+      
+      const finalName = (selectVal === 'Custom') ? customVal : selectVal;
+      const qty = Number(document.getElementById('rsIngQty').value);
+      const unit = document.getElementById('rsIngUnit').value;
+      const notes = document.getElementById('rsIngNotes').value.trim();
+
+      if (!finalName || !qty) return alert("Select or enter a vegetable name and enter quantity.");
+      
+      studioIngredients.push({ id: Date.now(), group: grp, item: finalName, qty: qty, unit: unit, notes: notes });
+      document.getElementById('rsIngQty').value = "";
+      document.getElementById('rsIngNotes').value = "";
+      if (selectVal === 'Custom') document.getElementById('rsIngCustomName').value = "";
+      
+      rsRenderIngredients();
+    }
+
+    function rsRemoveIngredient(id) {
+      studioIngredients = studioIngredients.filter(i => i.id !== id);
+      rsRenderIngredients();
+    }
+
+    function rsRenderIngredients() {
+      const container = document.getElementById('rsIngredientList');
+      const countDisplay = document.getElementById('stagedCount');
+      countDisplay.innerText = `${studioIngredients.length} item${studioIngredients.length === 1 ? '' : 's'} staged`;
+
+      if (studioIngredients.length === 0) {
+        container.innerHTML = '<p class="text-xs text-slate-500 italic p-3 text-center">No ingredients staged yet. Use the selector above to build your recipe.</p>';
         return;
       }
+      
+      container.innerHTML = studioIngredients.map(ing => `
+        <div class="flex items-center justify-between py-2 px-3 bg-slate-950/60 hover:bg-slate-950 transition text-xs">
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-emerald-400 font-mono">${ing.qty} ${ing.unit}</span>
+            <span class="text-white font-medium">${ing.item}</span>
+            <span class="text-[10px] text-slate-400 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">${ing.group}</span>
+            ${ing.notes ? `<span class="text-[10px] text-slate-500 italic">(${ing.notes})</span>` : ''}
+          </div>
+          <button onclick="rsRemoveIngredient(${ing.id})" class="text-rose-500 hover:text-rose-400 font-bold px-2 py-0.5 cursor-pointer">✕</button>
+        </div>
+      `).join('');
+    }
 
-      const apiKeyInput = document.getElementById('cfgApiKey');
-      const apiKey = (apiKeyInput?.value || '').trim() || safeLoadStorage('gemini_api_key', '');
+    function clearStudio() {
+      studioIngredients = [];
+      studioMatrix = null;
+      document.getElementById('rsName').value = "";
+      document.getElementById('rsYield').value = "1800";
+      document.getElementById('rsPortions').value = "4";
+      document.getElementById('rsActiveId').value = "";
+      document.getElementById('btnSaveDB').classList.add('opacity-50', 'cursor-not-allowed');
+      document.getElementById('btnSaveDB').disabled = true;
+      
+      document.getElementById('resK1').innerText = "-- mcg";
+      document.getElementById('resA').innerText = "-- mcg";
+      document.getElementById('resC').innerText = "-- mg";
+      document.getElementById('resB9').innerText = "-- mcg";
+      document.getElementById('resK').innerText = "-- mg";
+      document.getElementById('resMg').innerText = "-- mg";
+      document.getElementById('resCa').innerText = "-- mg";
+      document.getElementById('resFe').innerText = "-- mg";
+      document.getElementById('resYieldStatus').innerText = "Est. Yield: -- ml";
+      document.getElementById('resPurpose').value = "";
+      document.getElementById('resTaste').value = "";
+      rsRenderIngredients();
+    }
 
-      if (!apiKey) {
-        const panel = document.getElementById('settingsPanel');
-        if (panel) panel.classList.remove('hidden');
-        if (apiKeyInput) apiKeyInput.focus();
-        alert("Please enter your Gemini API Key in the 'Targets & Goals' panel above to enable AI macro estimation.");
-        return;
-      }
+    // ==========================================
+    // COMPUTE MASTER BATCH
+    // (DYNAMIC MODEL DISCOVERY + LOCAL USDA ENGINE)
+    // ==========================================
+    async function computeMasterBatch() {
+      if (studioIngredients.length === 0) return alert("Stage your recipe ingredients first.");
 
-      const food = foodInput.value.trim();
-      const portion = (document.getElementById(`portion_${category}`)?.value || '').trim();
-      const state = document.getElementById(`state_${category}`)?.value || "Raw";
-      const notes = (document.getElementById(`notes_${category}`)?.value || '').trim();
+      const btn = document.getElementById('btnAiCompute');
+      btn.innerHTML = '✨ Calculating Batch...';
+      btn.disabled = true;
 
-      const sparkleIcon = document.getElementById(`sparkleIcon_${category}`);
-      const spinnerIcon = document.getElementById(`spinnerIcon_${category}`);
-      const sparkleBtn = document.getElementById(`sparkleBtn_${category}`);
+      // 1. Calculate Local USDA totals first
+      let totalK1 = 0, totalA = 0, totalC = 0, totalB9 = 0;
+      let totalK = 0, totalMg = 0, totalCa = 0, totalFe = 0;
+      let estYieldMl = 0;
 
-      if (sparkleIcon) sparkleIcon.classList.add('hidden');
-      if (spinnerIcon) spinnerIcon.classList.remove('hidden');
-      if (sparkleBtn) sparkleBtn.disabled = true;
+      studioIngredients.forEach(ing => {
+        const itemData = USDA_DB[ing.item] || { k1: 10, a: 20, c: 15, b9: 20, k: 250, mg: 20, ca: 30, fe: 0.5, yield: 0.75, med: 100 };
+        
+        let grams = 0;
+        if (ing.unit === "grams") grams = ing.qty;
+        else if (ing.unit === "oz") grams = ing.qty * 28.35;
+        else if (ing.unit === "Whole Medium") grams = ing.qty * (itemData.med || 150);
+        else if (ing.unit === "Whole Large") grams = ing.qty * (itemData.lrg || (itemData.med ? itemData.med * 1.4 : 200));
+        else if (ing.unit === "Whole Small") grams = ing.qty * (itemData.sm || (itemData.med ? itemData.med * 0.7 : 100));
+        else if (ing.unit === "Full Bunch") grams = ing.qty * (itemData.bunch || 60);
+        else if (ing.unit === "Stalks / Ribs") grams = ing.qty * (itemData.med || 50);
+        else if (ing.unit === "Pieces / Rings") grams = ing.qty * (itemData.piece || 20);
+        else if (ing.unit === "Cups Sliced") grams = ing.qty * (itemData.cup || 120);
+        else grams = ing.qty * 100;
 
-      try {
-        const promptText = `Estimate accurate macronutrients for this food item:
-Food: "${food}"
-Portion: "${portion || 'standard serving'}"
-Preparation State: "${state}"
-Notes: "${notes}"
+        const factor = grams / 100.0;
+        totalK1 += (itemData.k1 || 0) * factor;
+        totalA  += (itemData.a  || 0) * factor;
+        totalC  += (itemData.c  || 0) * factor;
+        totalB9 += (itemData.b9 || 0) * factor;
+        totalK  += (itemData.k  || 0) * factor;
+        totalMg += (itemData.mg || 0) * factor;
+        totalCa += (itemData.ca || 0) * factor;
+        totalFe += (itemData.fe || 0) * factor;
+        estYieldMl += grams * (itemData.yield || 0.75);
+      });
 
-Account for whether it is raw or cooked and any stated cooking oils or preparation.
-Return strictly JSON with exact numeric values:
-{"calories": number, "protein": number, "carbs": number, "fat": number}`;
+      studioMatrix = {
+        Vit_K1_mcg: Math.round(totalK1 * 10) / 10,
+        Vit_A_mcg: Math.round(totalA * 10) / 10,
+        Vit_C_mg: Math.round(totalC * 10) / 10,
+        Folate_B9_mcg: Math.round(totalB9 * 10) / 10,
+        Potassium_mg: Math.round(totalK * 10) / 10,
+        Magnesium_mg: Math.round(totalMg * 10) / 10,
+        Calcium_mg: Math.round(totalCa * 10) / 10,
+        Iron_mg: Math.round(totalFe * 10) / 10,
+        Estimated_Yield_ml: Math.round(estYieldMl),
+        Biological_Purpose: "Clinical green matrix delivering high-potency cellular electrolytes, Phase II Nrf2 induction, and mucosal support.",
+        Taste_Notes: "Crisp and cleanly vegetal, balanced by natural organic acids."
+      };
 
+      // 2. Render baselines immediately
+      renderComputedMatrix();
+
+      // 3. Dynamic Model Discovery & Execution if API key is present
+      const apiKey = (document.getElementById('cfgApiKey').value || '').trim();
+      if (apiKey) {
+        const itemsText = studioIngredients.map(i => `${i.qty} ${i.unit} ${i.item} (${i.group}${i.notes ? ', ' + i.notes : ''})`).join(", ");
+        const yieldMl = document.getElementById('rsYield').value;
+
+        const promptText = `You are a clinical nutrition biochemistry analyzer.
+Analyze this COMPLETE juicing batch recipe:
+Target liquid yield: ${yieldMl} ml.
+Ingredients list: ${itemsText}.
+
+Based on standard USDA FoodData Central values, calculate the TOTAL RAW EXTRACTED BATCH amounts for:
+- Vitamin K1 (in mcg)
+- Vitamin A (in mcg RAE)
+- Vitamin C (in mg)
+- Folate / Vitamin B9 (in mcg)
+- Potassium (in mg)
+- Magnesium (in mg)
+- Calcium (in mg)
+- Iron (in mg)
+- Estimated liquid yield produced by these weights (in ml)
+- 1-sentence Biological_Purpose
+- 1-sentence Taste_Notes
+
+Return STRICTLY valid JSON with these keys:
+{
+  "Vit_K1_mcg": number,
+  "Vit_A_mcg": number,
+  "Vit_C_mg": number,
+  "Folate_B9_mcg": number,
+  "Potassium_mg": number,
+  "Magnesium_mg": number,
+  "Calcium_mg": number,
+  "Iron_mg": number,
+  "Estimated_Yield_ml": number,
+  "Biological_Purpose": "string",
+  "Taste_Notes": "string"
+}`;
+
+        // Dynamic discovery algorithm matching the meal tracker
         let modelsToTry = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-8b'];
         try {
           const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
@@ -613,7 +672,7 @@ Return strictly JSON with exact numeric values:
         }
 
         let parsed = null;
-        let lastErrorMsg = '';
+        let successfulModel = '';
 
         for (const model of modelsToTry) {
           try {
@@ -631,248 +690,295 @@ Return strictly JSON with exact numeric values:
               const rawJsonText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
               if (rawJsonText) {
                 parsed = JSON.parse(rawJsonText);
+                successfulModel = model;
                 break;
               }
-            } else {
-              lastErrorMsg = `HTTP ${response.status} (${model}): ${await response.text()}`;
             }
           } catch (netErr) {
-            lastErrorMsg = netErr.message;
+            console.warn(`Attempt with ${model} failed:`, netErr);
           }
         }
 
-        if (!parsed) throw new Error(lastErrorMsg || "All model endpoints failed to respond.");
-
-        document.getElementById(`cal_${category}`).value = Math.round(Number(parsed.calories) || 0);
-        document.getElementById(`prot_${category}`).value = Math.round(Number(parsed.protein) || 0);
-        document.getElementById(`carb_${category}`).value = Math.round(Number(parsed.carbs) || 0);
-        document.getElementById(`fat_${category}`).value = Math.round(Number(parsed.fat) || 0);
-
-      } catch (err) {
-        console.error("AI Estimation failed:", err);
-        alert(`Macro estimation error: ${err.message}. Please verify your API key or fill fields manually.`);
-      } finally {
-        if (sparkleIcon) sparkleIcon.classList.remove('hidden');
-        if (spinnerIcon) spinnerIcon.classList.add('hidden');
-        if (sparkleBtn) sparkleBtn.disabled = false;
-      }
-    }
-
-    function submitItem(category) {
-      const foodInput = document.getElementById(`food_${category}`);
-      if (!foodInput || !foodInput.value.trim()) {
-        alert("Please enter a food name.");
-        return;
-      }
-
-      const food = foodInput.value.trim();
-      const portion = (document.getElementById(`portion_${category}`)?.value || '').trim() || "1 serving";
-      const state = document.getElementById(`state_${category}`)?.value || "Raw";
-      const calories = Number(document.getElementById(`cal_${category}`)?.value) || 0;
-      const protein = Number(document.getElementById(`prot_${category}`)?.value) || 0;
-      const carbs = Number(document.getElementById(`carb_${category}`)?.value) || 0;
-      const fat = Number(document.getElementById(`fat_${category}`)?.value) || 0;
-      const notes = (document.getElementById(`notes_${category}`)?.value || '').trim();
-
-      if (!meals[category]) meals[category] = [];
-
-      if (editingItemId) {
-        const index = meals[category].findIndex(i => i.id === editingItemId);
-        if (index !== -1) {
-          meals[category][index] = { 
-            id: editingItemId, food, portion, state, calories, protein, carbs, fat, notes 
+        if (parsed) {
+          studioMatrix = {
+            Vit_K1_mcg: Number(parsed.Vit_K1_mcg) || studioMatrix.Vit_K1_mcg,
+            Vit_A_mcg: Number(parsed.Vit_A_mcg) || studioMatrix.Vit_A_mcg,
+            Vit_C_mg: Number(parsed.Vit_C_mg) || studioMatrix.Vit_C_mg,
+            Folate_B9_mcg: Number(parsed.Folate_B9_mcg) || studioMatrix.Folate_B9_mcg,
+            Potassium_mg: Number(parsed.Potassium_mg) || studioMatrix.Potassium_mg,
+            Magnesium_mg: Number(parsed.Magnesium_mg) || studioMatrix.Magnesium_mg,
+            Calcium_mg: Number(parsed.Calcium_mg) || studioMatrix.Calcium_mg,
+            Iron_mg: Number(parsed.Iron_mg) || studioMatrix.Iron_mg,
+            Estimated_Yield_ml: Number(parsed.Estimated_Yield_ml) || studioMatrix.Estimated_Yield_ml,
+            Biological_Purpose: parsed.Biological_Purpose || studioMatrix.Biological_Purpose,
+            Taste_Notes: parsed.Taste_Notes || studioMatrix.Taste_Notes
           };
+          renderComputedMatrix();
+          showBanner(`Computed with ${successfulModel}!`);
+        } else {
+          showBanner("USDA calculations complete! (AI model connection bypassed)");
         }
       } else {
-        meals[category].push({
-          id: Date.now().toString(), food, portion, state, calories, protein, carbs, fat, notes
-        });
+        showBanner("Batch calculated locally via USDA FoodData Engine!");
       }
 
-      activeOpenForm = null;
-      editingItemId = null;
-      safeSaveStorage('macro_meals_db', meals);
-      renderDashboard();
-      renderMeals();
+      btn.innerHTML = '✨ Compute Master Batch';
+      btn.disabled = false;
     }
 
-    function deleteItem(category, id) {
-      if (!meals[category]) return;
-      meals[category] = meals[category].filter(i => i.id !== id);
-      if (editingItemId === id) editingItemId = null;
-      safeSaveStorage('macro_meals_db', meals);
-      renderDashboard();
-      renderMeals();
+    function renderComputedMatrix() {
+      document.getElementById('resK1').innerText = studioMatrix.Vit_K1_mcg + " mcg";
+      document.getElementById('resA').innerText = studioMatrix.Vit_A_mcg + " mcg";
+      document.getElementById('resC').innerText = studioMatrix.Vit_C_mg + " mg";
+      document.getElementById('resB9').innerText = studioMatrix.Folate_B9_mcg + " mcg";
+      document.getElementById('resK').innerText = studioMatrix.Potassium_mg + " mg";
+      document.getElementById('resMg').innerText = studioMatrix.Magnesium_mg + " mg";
+      document.getElementById('resCa').innerText = studioMatrix.Calcium_mg + " mg";
+      document.getElementById('resFe').innerText = studioMatrix.Iron_mg + " mg";
+      document.getElementById('resYieldStatus').innerText = `Est. Yield: ${studioMatrix.Estimated_Yield_ml} ml`;
+      document.getElementById('resPurpose').value = studioMatrix.Biological_Purpose;
+      document.getElementById('resTaste').value = studioMatrix.Taste_Notes;
+
+      document.getElementById('btnSaveDB').classList.remove('opacity-50', 'cursor-not-allowed');
+      document.getElementById('btnSaveDB').disabled = false;
     }
 
-    async function saveDayToDrive() {
-      const scriptUrlInput = document.getElementById('cfgScriptUrl');
-      const SCRIPT_URL = (scriptUrlInput?.value || '').trim() || safeLoadStorage('google_script_url', '');
-
-      if (!SCRIPT_URL) {
-        const panel = document.getElementById('settingsPanel');
-        if (panel) panel.classList.remove('hidden');
-        if (scriptUrlInput) scriptUrlInput.focus();
-        alert("Please enter your Google Apps Script URL in the 'Targets & Goals' panel to enable saving to Drive.");
-        return;
-      }
-
-      const allRows = Object.entries(meals).flatMap(([mealName, items]) =>
-        (items || []).map(item => ({
-          date: new Date().toISOString().split('T')[0],
-          dayOfWeek: new Date().toLocaleDateString('en-US', { weekday: 'long' }),
-          meal: mealName,
-          food: item.food,
-          portion: item.portion,
-          state: item.state,
-          calories: item.calories,
-          protein: item.protein,
-          carbs: item.carbs,
-          fat: item.fat,
-          notes: item.notes || ""
-        }))
-      );
-
-      if (allRows.length === 0) {
-        alert("No items logged to save!");
-        return;
-      }
-
-      const saveBtn = document.getElementById('saveDriveBtn');
-      const saveText = document.getElementById('saveDriveText');
-      const banner = document.getElementById('statusBanner');
-
-      saveBtn.disabled = true;
-      saveBtn.classList.add('opacity-60', 'cursor-not-allowed');
-      saveText.innerText = "Syncing...";
-
+    // Google Sheets Communication
+    async function fetchRecipesFromDB() {
+      const url = document.getElementById('cfgScriptUrl').value;
+      if(!url || !url.includes("script.google.com")) return;
+      
+      document.getElementById('activeRecipeSelect').innerHTML = '<option>Connecting to Google Drive...</option>';
+      
       try {
-        await fetch(SCRIPT_URL, {
+        const res = await fetch(url);
+        const json = await res.json();
+        if(json.status === "success") {
+          dbRecipes = json.data;
+          populateDropdown();
+          showBanner(`Loaded ${dbRecipes.length} recipes from Database.`);
+        }
+      } catch(e) {
+        document.getElementById('activeRecipeSelect').innerHTML = '<option value="">-- Ready: Create recipe in Studio or select --</option>';
+      }
+    }
+
+    function populateDropdown() {
+      const sel = document.getElementById('activeRecipeSelect');
+      sel.innerHTML = '<option value="">-- Select a Master Recipe --</option>';
+      dbRecipes.forEach(r => {
+        sel.innerHTML += `<option value="${r.Recipe_ID}">${r.Recipe_ID}: ${r.Recipe_Name} (${r.Batch_Yield_ml} ml)</option>`;
+      });
+    }
+
+    async function pushToDB(actionPayload) {
+      const url = document.getElementById('cfgScriptUrl').value;
+      if(!url) return alert("Google Apps Script Webhook URL is missing.");
+      
+      try {
+        await fetch(url, {
           method: "POST",
           mode: "no-cors",
           headers: { "Content-Type": "text/plain" },
-          body: JSON.stringify(allRows)
+          body: JSON.stringify(actionPayload)
         });
-
-        banner.className = "p-4 rounded-xl border bg-emerald-950/80 border-emerald-800 text-emerald-200 block";
-        banner.innerText = `Synced ${allRows.length} items directly to your Google Sheet!`;
-      } catch (err) {
-        banner.className = "p-4 rounded-xl border bg-rose-950/80 border-rose-800 text-rose-200 block";
-        banner.innerText = "Error syncing to Google Sheets. Verify internet connection.";
-      } finally {
-        saveBtn.disabled = false;
-        saveBtn.classList.remove('opacity-60', 'cursor-not-allowed');
-        saveText.innerText = "Save to Drive";
-        setTimeout(() => banner.classList.add('hidden'), 5000);
-      }
-    }
-
-    window.toggleSettings = toggleSettings;
-    window.updateTargets = updateTargets;
-    window.toggleAddForm = toggleAddForm;
-    window.estimateWithAI = estimateWithAI;
-    window.submitItem = submitItem;
-    window.deleteItem = deleteItem;
-    window.editItem = editItem;
-    window.saveDayToDrive = saveDayToDrive;
-
-    function initializeApp() {
-      const toggleBtn = document.getElementById('toggleSettingsBtn');
-      if (toggleBtn) toggleBtn.addEventListener('click', toggleSettings);
-
-      const saveBtn = document.getElementById('saveDriveBtn');
-      if (saveBtn) saveBtn.addEventListener('click', saveDayToDrive);
-
-      // --- NEW: Open Sheet Logic ---
-      const openSheetBtn = document.getElementById('openSheetBtn');
-      if (openSheetBtn) {
-        openSheetBtn.addEventListener('click', () => {
-          const currentUrl = safeLoadStorage('google_sheet_url', '');
-          if (!currentUrl) {
-            const panel = document.getElementById('settingsPanel');
-            if (panel) panel.classList.remove('hidden');
-            const sheetUrlEl = document.getElementById('cfgSheetUrl');
-            if (sheetUrlEl) sheetUrlEl.focus();
-            alert("Please paste your Google Sheet Document Link in the Targets & Goals panel first.");
-            return;
+        
+        setTimeout(() => {
+          if(actionPayload.action === "log_batch") {
+             showBanner("Batch logged successfully to Daily_Batch_Log tab!");
+             document.getElementById('btnLogBatch').innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg> Confirm Batch N+1 (Pushes to Drive)`;
+             document.getElementById('btnLogBatch').disabled = false;
+          } else {
+             showBanner(`Recipe saved to Google Sheets!`);
+             clearStudio();
+             switchTab('batchHub');
+             fetchRecipesFromDB();
           }
-          window.open(currentUrl, '_blank');
-        });
-      }
-
-      // 1. Load Gemini API Key
-      const savedApiKey = safeLoadStorage('gemini_api_key', '');
-      const apiKeyEl = document.getElementById('cfgApiKey');
-      if (apiKeyEl && savedApiKey) apiKeyEl.value = savedApiKey;
-
-      if (apiKeyEl) {
-        apiKeyEl.addEventListener('input', (e) => safeSaveStorage('gemini_api_key', e.target.value.trim()));
-        apiKeyEl.addEventListener('change', (e) => safeSaveStorage('gemini_api_key', e.target.value.trim()));
-      }
-
-      // 2. Load Google Apps Script URL
-      const savedScriptUrl = safeLoadStorage('google_script_url', '');
-      const scriptUrlEl = document.getElementById('cfgScriptUrl');
-      if (scriptUrlEl && savedScriptUrl) scriptUrlEl.value = savedScriptUrl;
-
-      if (scriptUrlEl) {
-        scriptUrlEl.addEventListener('input', (e) => safeSaveStorage('google_script_url', e.target.value.trim()));
-        scriptUrlEl.addEventListener('change', (e) => safeSaveStorage('google_script_url', e.target.value.trim()));
-      }
-
-      // 3. Load Google Sheet Document Link
-      const savedSheetUrl = safeLoadStorage('google_sheet_url', '');
-      const sheetUrlEl = document.getElementById('cfgSheetUrl');
-      if (sheetUrlEl && savedSheetUrl) sheetUrlEl.value = savedSheetUrl;
-
-      if (sheetUrlEl) {
-        sheetUrlEl.addEventListener('input', (e) => safeSaveStorage('google_sheet_url', e.target.value.trim()));
-        sheetUrlEl.addEventListener('change', (e) => safeSaveStorage('google_sheet_url', e.target.value.trim()));
-      }
-
-      // 4. Restore and Persist Profile Fields
-      const profileFields = ['cfgGender', 'cfgAge', 'cfgWeight', 'cfgHeight', 'cfgActivity', 'cfgGoal'];
-      const savedProfile = safeLoadStorage('macro_user_profile', null);
-      if (savedProfile) {
-        profileFields.forEach(id => {
-          const el = document.getElementById(id);
-          if (el && savedProfile[id] !== undefined) el.value = savedProfile[id];
-        });
-      }
-
-      // Auto-save changes to Profile Fields
-      profileFields.forEach(id => {
-        const input = document.getElementById(id);
-        if (input) {
-          const handleUpdate = () => {
-            const currentProfile = {};
-            profileFields.forEach(fieldId => {
-              const el = document.getElementById(fieldId);
-              if (el) currentProfile[fieldId] = el.value;
-            });
-            safeSaveStorage('macro_user_profile', currentProfile);
-            updateTargets();
-          };
-          input.addEventListener('change', handleUpdate);
-          input.addEventListener('input', handleUpdate);
-        }
-      });
-
-      updateTargets();
-      renderMeals();
-
-      // Register PWA Service Worker
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js').catch(err => {
-          console.warn('Service worker registration failed:', err);
-        });
+        }, 1500);
+      } catch(e) {
+        alert("Network Error: " + e.message);
       }
     }
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initializeApp);
-    } else {
-      initializeApp();
+    function saveRecipeToDB() {
+      const name = document.getElementById('rsName').value.trim();
+      if(!name || !studioMatrix) return alert("Recipe name and calculated matrix are required.");
+      
+      const payload = {
+        action: "save_recipe",
+        recipe: {
+          Recipe_Name: name,
+          Batch_Yield_ml: document.getElementById('rsYield').value,
+          Portion_Size_ml: document.getElementById('rsYield').value / document.getElementById('rsPortions').value,
+          Ingredients_JSON: JSON.stringify(studioIngredients),
+          Vit_K1_mcg: studioMatrix.Vit_K1_mcg,
+          Vit_A_mcg: studioMatrix.Vit_A_mcg,
+          Vit_C_mg: studioMatrix.Vit_C_mg,
+          Potassium_mg: studioMatrix.Potassium_mg,
+          Magnesium_mg: studioMatrix.Magnesium_mg,
+          Biological_Purpose: studioMatrix.Biological_Purpose,
+          Taste_Notes: studioMatrix.Taste_Notes
+        }
+      };
+      pushToDB(payload);
+    }
+
+    // Daily Batch Ingestion Logic
+    function loadRecipeToBatchHub() {
+      const id = document.getElementById('activeRecipeSelect').value;
+      const r = dbRecipes.find(x => x.Recipe_ID === id);
+      const tbody = document.getElementById('batchMatrixBody');
+      const btn = document.getElementById('btnLogBatch');
+      
+      if(!r) {
+        tbody.innerHTML = '<tr><td colspan="9" class="py-4 text-center text-slate-500 italic font-sans">Select a recipe to view matrix...</td></tr>';
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+        btn.disabled = true;
+        return;
+      }
+
+      const portionCount = Number(r.Batch_Yield_ml) / Number(r.Portion_Size_ml);
+      document.getElementById('batchYieldDisplay').innerText = `Yield: ${r.Batch_Yield_ml}ml | Daily: ${r.Portion_Size_ml}ml`;
+
+      const jK = Number(r.Vit_K1_mcg) / portionCount;
+      const jA = Number(r.Vit_A_mcg) / portionCount;
+      const jC = Number(r.Vit_C_mg) / portionCount;
+      const jB9 = 181.9;
+      const jPot = Number(r.Potassium_mg) / portionCount;
+      const jMg = Number(r.Magnesium_mg) / portionCount;
+      const jCa = 85.0;
+      const jFe = 2.4;
+
+      const tK = jK + FIXED_SUPPLEMENTS.shot.k1 + FIXED_SUPPLEMENTS.multi.k1 + FIXED_SUPPLEMENTS.turm.k1;
+      const tA = jA + FIXED_SUPPLEMENTS.shot.a + FIXED_SUPPLEMENTS.multi.a + FIXED_SUPPLEMENTS.turm.a;
+      const tC = jC + FIXED_SUPPLEMENTS.shot.c + FIXED_SUPPLEMENTS.multi.c + FIXED_SUPPLEMENTS.turm.c;
+      const tB9 = jB9 + FIXED_SUPPLEMENTS.shot.b9 + FIXED_SUPPLEMENTS.multi.b9 + FIXED_SUPPLEMENTS.turm.b9;
+      const tPot = jPot + FIXED_SUPPLEMENTS.shot.k + FIXED_SUPPLEMENTS.multi.k + FIXED_SUPPLEMENTS.turm.k;
+      const tMg = jMg + FIXED_SUPPLEMENTS.shot.mg + FIXED_SUPPLEMENTS.multi.mg + FIXED_SUPPLEMENTS.turm.mg;
+      const tCa = jCa + FIXED_SUPPLEMENTS.shot.ca + FIXED_SUPPLEMENTS.multi.ca + FIXED_SUPPLEMENTS.turm.ca;
+      const tFe = jFe + FIXED_SUPPLEMENTS.shot.fe + FIXED_SUPPLEMENTS.multi.fe + FIXED_SUPPLEMENTS.turm.fe;
+
+      tbody.innerHTML = `
+        <tr>
+          <td class="py-2 px-1.5 font-sans font-medium text-slate-200">1. Raw Juice (${r.Portion_Size_ml}ml)</td>
+          <td class="py-2 px-1.5 text-emerald-400">${jK.toFixed(1)}</td>
+          <td class="py-2 px-1.5 text-sky-400">${jA.toFixed(1)}</td>
+          <td class="py-2 px-1.5 text-amber-400">${jC.toFixed(1)}</td>
+          <td class="py-2 px-1.5 text-teal-400">${jB9.toFixed(1)}</td>
+          <td class="py-2 px-1.5 text-indigo-400">${jPot.toFixed(1)}</td>
+          <td class="py-2 px-1.5 text-slate-300">${jMg.toFixed(1)}</td>
+          <td class="py-2 px-1.5 text-orange-400">${jCa.toFixed(1)}</td>
+          <td class="py-2 px-1.5 text-rose-400">${jFe.toFixed(1)}</td>
+        </tr>
+        <tr>
+          <td class="py-2 px-1.5 font-sans font-medium text-slate-200">2. Medicine Shot</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.shot.k1.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.shot.a.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.shot.c.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.shot.b9.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.shot.k.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.shot.mg.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.shot.ca.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.shot.fe.toFixed(1)}</td>
+        </tr>
+        <tr>
+          <td class="py-2 px-1.5 font-sans font-medium text-slate-200">3. Kirkland Multi</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.multi.k1.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.multi.a.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.multi.c.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.multi.b9.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.multi.k.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.multi.mg.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.multi.ca.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.multi.fe.toFixed(1)}</td>
+        </tr>
+        <tr>
+          <td class="py-2 px-1.5 font-sans font-medium text-slate-200">4. Turmeric Cap</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.turm.k1.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.turm.a.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.turm.c.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.turm.b9.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.turm.k.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.turm.mg.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.turm.ca.toFixed(1)}</td>
+          <td class="py-2 px-1.5">${FIXED_SUPPLEMENTS.turm.fe.toFixed(1)}</td>
+        </tr>
+        <tr class="bg-slate-950 font-bold border-t border-slate-700">
+          <td class="py-2 px-1.5 font-sans text-white">GRAND DAILY TOTAL</td>
+          <td class="py-2 px-1.5 text-emerald-300">${tK.toFixed(1)}</td>
+          <td class="py-2 px-1.5 text-sky-300">${tA.toFixed(1)}</td>
+          <td class="py-2 px-1.5 text-amber-300">${tC.toFixed(1)}</td>
+          <td class="py-2 px-1.5 text-teal-300">${tB9.toFixed(1)}</td>
+          <td class="py-2 px-1.5 text-indigo-300">${tPot.toFixed(1)}</td>
+          <td class="py-2 px-1.5 text-slate-200">${tMg.toFixed(1)}</td>
+          <td class="py-2 px-1.5 text-orange-300">${tCa.toFixed(1)}</td>
+          <td class="py-2 px-1.5 text-rose-300">${tFe.toFixed(1)}</td>
+        </tr>
+      `;
+
+      const activeWeight = document.getElementById('currentWeight').value || "";
+      const startDateStr = document.getElementById('batchExtractionDate').value || new Date().toISOString().split('T')[0];
+      const baseDate = new Date(startDateStr + 'T00:00:00');
+
+      activeBatchRows = [];
+      for(let i=0; i<portionCount; i++) {
+         const d = new Date(baseDate);
+         d.setDate(baseDate.getDate() + i);
+         activeBatchRows.push({
+           date: d.toISOString().split('T')[0],
+           day_of_week: d.toLocaleDateString('en-US', { weekday: 'long' }),
+           portion_ml: r.Portion_Size_ml,
+           recipe_used: r.Recipe_ID,
+           weight_lbs: activeWeight,
+           vit_k1: tK.toFixed(1),
+           vit_a: tA.toFixed(1),
+           vit_c: tC.toFixed(1),
+           potassium: tPot.toFixed(1),
+           magnesium: tMg.toFixed(1),
+           supplements: "Shot + Multi + Turmeric"
+         });
+      }
+
+      btn.classList.remove('opacity-50', 'cursor-not-allowed');
+      btn.disabled = false;
+      btn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg> Confirm Batch N+1 (Pushes ${portionCount} Days)`;
+    }
+
+    function deployBatchToDrive() {
+      if(activeBatchRows.length === 0) return;
+      
+      const weight = document.getElementById('currentWeight').value;
+      if(!weight) return alert("Please enter your current weight (lbs) before confirming.");
+      
+      safeStorage('jdb_last_weight', weight);
+      activeBatchRows.forEach(r => r.weight_lbs = weight);
+
+      const btn = document.getElementById('btnLogBatch');
+      btn.innerHTML = 'Deploying to Google Sheets...';
+      btn.disabled = true;
+
+      pushToDB({
+        action: "log_batch",
+        rows: activeBatchRows
+      });
+    }
+
+    // App Initialization
+    document.getElementById('cfgApiKey').value = safeStorage('jdb_gemini_key');
+    document.getElementById('cfgApiKey').addEventListener('change', e => safeStorage('jdb_gemini_key', e.target.value.trim()));
+    
+    document.getElementById('cfgScriptUrl').value = safeStorage('jdb_script_url') || document.getElementById('cfgScriptUrl').value;
+    document.getElementById('cfgScriptUrl').addEventListener('change', e => safeStorage('jdb_script_url', e.target.value.trim()));
+
+    document.getElementById('currentWeight').value = safeStorage('jdb_last_weight');
+    document.getElementById('currentWeight').addEventListener('change', e => safeStorage('jdb_last_weight', e.target.value.trim()));
+
+    document.getElementById('batchExtractionDate').value = new Date().toISOString().split('T')[0];
+
+    updateItemOptions();
+
+    if(document.getElementById('cfgScriptUrl').value) {
+      fetchRecipesFromDB();
     }
   </script>
 </body>
